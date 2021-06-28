@@ -1,79 +1,94 @@
-#include <unistd.h>
 
-int	ft_isalpha(int c)
+#include "ft_printf.h"
+
+t_flags ft_init_tab(void)
 {
-	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+	t_flags	tab;
+
+	tab.dot = -1;
+	tab.minus = 0;
+	tab.star = 0;
+	tab.type = 0;
+	tab.width = 0;
+	tab.zero = 0;
+	return(tab);
+}
+
+int	ft_check_flags(char c)
+{
+	if (!ft_which_type(c) && !ft_isdigit(c) && !ft_is_flag(c))
 		return (1);
 	return (0);
 }
 
-int	ft_isascii(int c)
+int	ft_parse_flags(const char *format, int i, t_flags *tab, va_list args)
 {
-	if ((c >= 0) && (c <= 0x7f))
-		return (1);
-	return (0);
-}
-
-void	ft_putchar(char c)
-{
-	write(1, &c, 1);
-}
-
-void	ft_putstr(char *str)
-{
-	if (!str)
-		return ;
-	while (*str != '\0')
+	while (format[i])
 	{
-		write(1, str, 1);
-		str++;
+		if (ft_check_flags(format[i]))
+			break ;
+		if (format[i] == '0'&& !(tab->minus) && !(tab->width))
+			tab->zero = 1;
+		if (format[i] == '.')
+			i = ft_flag_dot(format, i, tab, args);
+		if (format[i] == '-')
+			*tab = ft_flag_minus(args, *tab);
+		if (format[i] == '*')
+			//treat width
+		if (ft_isdigit(format[i]))
+		{
+			if (tab->star == 1)
+				tab->width = 0;
+			tab->width = (tab->width * 10) + (format[i] - '0');
+		}
+		if (ft_which_type(format[i++]))
+		{
+			tab->type = format[--i];
+			break ;
+		}
 	}
+	return (i);
 }
 
-int	ft_isdigit(int c)
+int	ft_incoming(const char *format, va_list args)
 {
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
-}
+	int		i;
+	int		count;
+	t_flags	tab;
 
-void	ft_putnbr(int nb)
-{
-	if (nb == -2147483648)
-		ft_putstr("-2147483648");
-	else if (nb < 0)
+	i = 0;
+	count =0;
+	while (format[i])
 	{
-		ft_putchar('-');
-		ft_putnbr(-nb);
+		tab = ft_init_tab();
+		if (format[i] == '%' && format[i+1]
+		{
+			i = ft_parse_flags(format, ++i, &tab, args);
+			if (ft_which_type(format[i]))
+				//convert string
+			else
+				return (count);//verificar se nao é count += ft_putchar(format[i])
+			return (count);
+		})
+		else if (format[i] != '%')
+			count += ft_putchat_returnint(format[i]);
+		i++;
 	}
-	else if (nb >= 10)
-	{
-		ft_putnbr(nb / 10);
-		ft_putchar(nb % 10 + '0');
-	}
-	else
-		ft_putchar(nb + '0');
+	return (count);
 }
 
-int	check_type_stdin()
+int	ft_printf(const char *format, ...)
 {
-	if ft_isdigit
+	va_list 	args;
+	int			count;
+
+	count = 0;
+	va_start(args, format);
+	//tratar format e args
+	va_end(args);
+	return (count);
 }
 
-int main (void)
-{
-//	int age = 100;
-// 	char b = 'B';
-	char sport[] = "football";
-
-/* 	ft_putchar(b);
-	ft_putchar('\n'); */
-	ft_putchar(age);
-	ft_putchar('\n');
-/* 	ft_putnbr(age);
-	ft_putchar('\n');
-	ft_putstr(sport);
-	ft_putchar('\n'); */
-
-	return (0);
+int main (void) {
+	ft_printf("ola %s %d %i", "string", 10, 5);
 }
