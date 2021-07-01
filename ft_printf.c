@@ -32,15 +32,9 @@ int	ft_parse_flags(const char *format, int i, t_flags *tab, va_list args)
 		if (format[i] == '.')
 			i = ft_flag_dot(format, i, tab, args);
 		if (format[i] == '-')
-<<<<<<< HEAD
 			*tab = ft_flag_minus(*tab);
 		if (format[i] == '*')
 			*tab = ft_flag_width(args, *tab);
-=======
-			*tab = ft_flag_minus(args, *tab);
-		if (format[i] == '*')
-			//treat width
->>>>>>> e0e02cdb386ab18c5b25f5672a8b207b4f2820fd
 		if (ft_isdigit(format[i]))
 		{
 			if (tab->star == 1)
@@ -49,11 +43,7 @@ int	ft_parse_flags(const char *format, int i, t_flags *tab, va_list args)
 		}
 		if (ft_which_type(format[i++]))
 		{
-<<<<<<< HEAD
 			tab->type = format[--i]; //pq?
-=======
-			tab->type = format[--i];
->>>>>>> e0e02cdb386ab18c5b25f5672a8b207b4f2820fd
 			break ;
 		}
 	}
@@ -71,7 +61,6 @@ int	ft_incoming(const char *format, va_list args)
 	while (format[i])
 	{
 		tab = ft_init_tab();
-<<<<<<< HEAD
 		if (format[i] == '%' && format[i+1])
 		{
 			i = ft_parse_flags(format, ++i, &tab, args);
@@ -80,19 +69,8 @@ int	ft_incoming(const char *format, va_list args)
 			else
 				return (count);//verificar se nao é count += ft_putchar(format[i])
 		}
-=======
-		if (format[i] == '%' && format[i+1]
-		{
-			i = ft_parse_flags(format, ++i, &tab, args);
-			if (ft_which_type(format[i]))
-				//convert string
-			else
-				return (count);//verificar se nao é count += ft_putchar(format[i])
-			return (count);
-		})
->>>>>>> e0e02cdb386ab18c5b25f5672a8b207b4f2820fd
 		else if (format[i] != '%')
-			count += ft_putchat_returnint(format[i]);
+			count += ft_putchar_returnint(format[i]);
 		i++;
 	}
 	return (count);
@@ -105,11 +83,7 @@ int	ft_printf(const char *format, ...)
 
 	count = 0;
 	va_start(args, format);
-<<<<<<< HEAD
 	count += ft_incoming(format, args);
-=======
-	//tratar format e args
->>>>>>> e0e02cdb386ab18c5b25f5672a8b207b4f2820fd
 	va_end(args);
 	return (count);
 }
