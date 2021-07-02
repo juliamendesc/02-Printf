@@ -16,6 +16,6 @@ int	ft_convert_char(int c, t_flags tab)
 		count += ft_putchar_returnint(c);
 	count += ft_width_treat(tab.width, 1, tab.zero);
 	if (!tab.minus)
-		count += ft_putchar_returnint(c)
+		count += ft_putchar_returnint(c);
 	return (count);
 }
