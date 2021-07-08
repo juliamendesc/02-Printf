@@ -38,30 +38,37 @@ int	ft_is_flag(char c)
 	return (0); 
 };
 
-int	ft_treat_flags(t_flags tab)
-{
+// int	ft_treat_flags(t_flags tab)
+// {
 
-};
+// };
 
-void	ft_parse_flags(const char *format, int i)
+int	ft_parse_flags(const char *format, int i)
 {
-	if (!ft_is_type(format[i]) && !ft_isdigit(format[i]) && !ft_is_flag(format[i]))
-		return ; // contempla os casos de tipos que nao incluímos, como o size
-	else
+	while (format[i])
 	{
-		if (format[i] == '-')
-			tab.minus = 1;
-		if (format[i] == '0' && tab.minus == 0)
-			tab.zero = 1;
-		if (format[i] == '.')
-			tab.dot = 0;
-		if (format[i] == '#')
-			tab.hash = 1;
-		if (format[i] == ' ')
-			tab.space = 1;
-		if (format[i] == '+')
-			tab.plus = 1;
+		if (!ft_is_type(format[i]) && !ft_isdigit(format[i]) && !ft_is_flag(format[i]))
+			break ; // contempla os casos de tipos que nao incluímos, como o size
+		else
+		{
+			if (format[i] == '-')
+				tab.minus = 1;
+			if (format[i] == '0' && tab.minus == 0)
+				tab.zero = 1;
+			if (format[i] == '.')
+				tab.dot = 0;
+			if (format[i] == '#')
+				tab.hash = 1;
+			if (format[i] == ' ')
+				tab.space = 1;
+			if (format[i] == '+')
+				tab.plus = 1;
+			if (ft_is_type(format[i]))
+				break ;
+		}
+		i++;
 	}
+	return (i);
 };
 
 int	ft_printf(const char *format, ...)
@@ -79,14 +86,14 @@ int	ft_printf(const char *format, ...)
 	{	
 		if (format[i] == '%' && format[i + 1])
 		{
-			ft_parse_flags(format, ++i);
+			ft_parse_flags(format, ++i); // devolve o i onde começa o tipo
+			// treat type conversion
 		}
 		if (format[i] != '%') {
 			ft_putchar(format[i]);
 			count++;
 		}
 	}
-	//check type
 	va_end(args);
 	return (count);
 };
