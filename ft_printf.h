@@ -13,6 +13,7 @@ typedef	struct s_flags
 	int		minus;
 	int		hash;
 	int		width;
+	int		space;
 	int		zero;
 	int		plus;
 	int		total_length;
