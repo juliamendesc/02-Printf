@@ -12,6 +12,7 @@ static t_flags tab = {
 	.total_length = 0
 };
 
+//----------------- LIBFT UTILS -----------------------
 void	ft_putchar(char c)
 {
 	write(1, &c, 1);
@@ -24,6 +25,25 @@ int	ft_isdigit(int c)
 	return (0);
 }
 
+char	*ft_strchr(const char *s, int c)
+{
+	char	a;
+
+	a = c;
+	while (*s)
+	{
+		if (*s == a)
+			return ((char *)s);
+		if (*s == '\0')
+			return (NULL);
+		s++;
+	}
+	if (!a && *s == '\0')
+		return ((char *)s);
+	return (NULL);
+}
+
+// -------------------------- SECOND UTILS ----------------------
 int ft_is_type(char c)
 {
 	if (c == 'c' || c == 's' || c == 'p' || c == 'd' || c == 'i' || c == 'u' || c == 'x' || c == 'X' || c == '%')
@@ -37,6 +57,8 @@ int	ft_is_flag(char c)
 		return (1);
 	return (0); 
 };
+
+//-------------------------MAOS A OBRA-------------------------------
 
 // int	ft_treat_flags(t_flags tab)
 // {
@@ -53,13 +75,13 @@ int	ft_parse_flags(const char *format, int i)
 		{
 			if (format[i] == '-')
 				tab.minus = 1;
-			if (format[i] == '0' && tab.minus == 0)
+			if (format[i] == '0' && tab.minus == 0 && ((tab.dot == -1) && ft_strchr("iuxXod", format[i])))
 				tab.zero = 1;
 			if (format[i] == '.')
 				tab.dot = 0;
 			if (format[i] == '#')
 				tab.hash = 1;
-			if (format[i] == ' ')
+			if (format[i] == ' ' && tab.plus == 0)
 				tab.space = 1;
 			if (format[i] == '+')
 				tab.plus = 1;
