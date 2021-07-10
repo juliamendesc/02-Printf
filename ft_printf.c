@@ -25,6 +25,46 @@ int	ft_isdigit(int c)
 	return (0);
 }
 
+static int	check_long_num(long long num)
+{
+	if (num >= 9223372036854775807)
+		return (-1);
+	if (num <= -9223372036854775807 || num > 2147483647)
+		return (0);
+	if (num < -2147483648)
+		return (-1);
+	else
+		return (num);
+}
+
+int			ft_atoi(const char *str)
+{
+	long long	num;
+	int			sign;
+	int			i;
+
+	num = 0;
+	sign = 1;
+	i = 0;
+	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n' ||
+			str[i] == '\r' || str[i] == '\v' || str[i] == '\f')
+		i++;
+	if (str[i] == '-' || str[i] == '+')
+	{
+		if (str[i] == '-')
+			sign = -1;
+		i++;
+	}
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		num = num * 10 + str[i] - '0';
+		i++;
+	}
+	num = num * sign;
+	return ((int)check_long_num(num));
+}
+
+
 char	*ft_strchr(const char *s, int c)
 {
 	char	a;
@@ -41,8 +81,7 @@ char	*ft_strchr(const char *s, int c)
 	if (!a && *s == '\0')
 		return ((char *)s);
 	return (NULL);
-}
-
+};
 // -------------------------- SECOND UTILS ----------------------
 int ft_is_type(char c)
 {
@@ -65,9 +104,9 @@ int	ft_is_flag(char c)
 
 // };
 
-int	ft_parse_flags(const char *format, int i)
+int	ft_parse_flags(const char *format, int i, va_list args)
 {
-	while (format[i])
+	while (format[i] != '\0')
 	{
 		if (!ft_is_type(format[i]) && !ft_isdigit(format[i]) && !ft_is_flag(format[i]))
 			break ; // contempla os casos de tipos que nao incluímos, como o size
@@ -75,10 +114,15 @@ int	ft_parse_flags(const char *format, int i)
 		{
 			if (format[i] == '-')
 				tab.minus = 1;
-			if (format[i] == '0' && tab.minus == 0 && ((tab.dot == -1) && ft_strchr("iuxXod", format[i])))
+			if (format[i] == '0' && tab.minus == 0 && ((tab.dot == -1) && !ft_strchr("iuxXod", format[i]))) 
 				tab.zero = 1;
 			if (format[i] == '.')
-				tab.dot = 0;
+			{	
+				if (ft_is_type(++i))
+					tab.dot = 0;
+				else
+					tab.dot = va_arg(args, int); //gets the number after the .
+			}
 			if (format[i] == '#')
 				tab.hash = 1;
 			if (format[i] == ' ' && tab.plus == 0)
@@ -90,6 +134,7 @@ int	ft_parse_flags(const char *format, int i)
 		}
 		i++;
 	}
+	printf("\ndot 5 %d\n dot 0 %d \n ", tab.dot, tab.dot);
 	return (i);
 };
 
@@ -108,12 +153,13 @@ int	ft_printf(const char *format, ...)
 	{	
 		if (format[i] == '%' && format[i + 1])
 		{
-			ft_parse_flags(format, ++i); // devolve o i onde começa o tipo
+			i = ft_parse_flags(format, ++i, args); // devolve o i onde começa o tipo
 			// treat type conversion
 		}
 		if (format[i] != '%') {
 			ft_putchar(format[i]);
 			count++;
+			i++;
 		}
 	}
 	va_end(args);
@@ -121,5 +167,5 @@ int	ft_printf(const char *format, ...)
 };
 
 int main (void) {
-	ft_printf("ola %s %d %i", "string", 10, 5);
+	ft_printf("ola %.5s %.d %i", "string", 10, 5);
 };
