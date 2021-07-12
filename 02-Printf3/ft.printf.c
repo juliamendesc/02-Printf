@@ -158,6 +158,59 @@ char    *ft_utoa(int digit)
     return (res);
 }
 
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	int		i;
+	int		j;
+	char	*str;
+
+	if (!s1 || !s2)
+		return (NULL);
+	i = 0;
+	j = 0;
+	if (!(str = (char *)malloc(sizeof(char) *
+			(ft_strlen(s1) + ft_strlen(s2) + 1))))
+	{
+		return (NULL);
+	}
+	while (s1[i] != '\0')
+	{
+		str[i] = s1[i];
+		i++;
+	}
+	while (s2[j] != '\0')
+	{
+		str[i + j] = s2[j];
+		j++;
+	}
+	str[i + j] = '\0';
+	return (str);
+}
+
+void ft_convert_pointer_to_hex(int pointer_value, char * pointer, t_tab *tab)
+{
+    int value;
+    int remainder;
+    int hexa;
+    char *temp;
+
+    value = pointer_value;
+    if (value >= 0 && value < 10)
+    {
+        temp = ft_itoa(value);
+        pointer = ft_strjoin(pointer, temp);
+        free (temp);
+    }
+    remainder = value % 16;
+    while (value >= 10)
+    {
+        if (remainder >= 10)
+        {
+            hexa = 
+        }
+    }
+}
+
 /*******************************************************/
 
 /*********************CONVERSIONS***********************/
@@ -167,7 +220,7 @@ void    ft_convert_char(t_tab *tab)
     char    c;
 
     c = va_arg(*tab->args, int);
-    tab->total_length+= ft_putchar(c);
+    tab->total_length += ft_putchar(c);
 }
 
 void    ft_convert_string(t_tab *tab)
@@ -185,7 +238,6 @@ void    ft_convert_number(t_tab *tab)
 
     digit = va_arg(*tab->args, int);
     converted_string = ft_itoa(digit);
-
     tab->total_length += ft_putstr(converted_string);
 }
 
@@ -198,6 +250,28 @@ void    ft_convert_unsigned_number(t_tab *tab)
     converted_string = ft_utoa(digit);
     tab->total_length += ft_strlen(converted_string);
     write(1, converted_string, ft_strlen(converted_string));
+}
+
+void    ft_convert_pointer(t_tab *tab)
+{
+    char *pointer;
+    int   pointer_value; //may need to change to long
+
+    pointer = NULL;
+    pointer_value = va_arg(*tab->args, int);
+    if (pointer_value == '\0')
+    {
+        pointer = ft_strdup("0x0");
+        tab->total_length += ft_strlen(pointer);
+        write (1, &pointer, ft_strlen(pointer));
+    }
+    else if (pointer_value != '\0')
+    {
+        pointer = ft_strdup("0x");
+        pointer = ft_convert_pointer_to_hex(pointer_value, pointer, tab); //conversion to hexadecimal
+        tab->total_length += ft_strlen(pointer);
+    }
+    free(pointer);
 }
 
 /********************************************************/
@@ -267,9 +341,10 @@ int     main()
 {
     int a;
     int b;
+    int *c = &a;
 
-    a = ft_printf("%s %c %d %% %u\n", "ola", 'l', 123, 651442);
-    b = printf("%s %c %d %% %u\n", "ola", 'l', 123, 651442);
+    a = ft_printf("%s %c %d %% %u %p\n", "ola", 'l', 123, 651442, c);
+    b = printf("%s %c %d %% %u %p\n", "ola", 'l', 123, 651442, c);
     
     ft_printf("%d\n", a);
     printf("%d\n", b);
