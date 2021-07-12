@@ -53,16 +53,3 @@ int	ft_printf(const char *format, ...)
 	free(copy);
 	return (tab.total_length);
 }
-
-// int     main()
-// {
-//     int a;
-//     int b;
-//     int *c = NULL;
-
-//     a = ft_printf("%s %c %d %% %u %X %x %p\n", "ola", 'l', 123, 651442, 30, 30, c);
-//     b = printf("%s %c %d %% %u %X %x %p\n", "ola", 'l', 123, 651442, 30, 30, c);
-    
-//     ft_printf("%d\n", a);
-//     printf("%d\n", b);
-// }
