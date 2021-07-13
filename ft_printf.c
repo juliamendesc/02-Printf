@@ -1,171 +1,68 @@
-
 #include "ft_printf.h"
 
-static t_flags tab = {
-	.dot = -1,
-	.minus = 0,
-	.hash = 0,
-	.width = 0,
-	.space = 0,
-	.zero = 0,
-	.plus = 0,
-	.total_length = 0
-};
-
-//----------------- LIBFT UTILS -----------------------
-void	ft_putchar(char c)
+void	init_struct(t_tab *tab, char *format, va_list *args)
 {
-	write(1, &c, 1);
-};
-
-int	ft_isdigit(int c)
-{
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
+	tab->format = format;
+	tab->args = args;
+	tab->index = 0;
+	tab->total_length = 0;
 }
 
-static int	check_long_num(long long num)
+void	ft_check_type(t_tab *tab)
 {
-	if (num >= 9223372036854775807)
-		return (-1);
-	if (num <= -9223372036854775807 || num > 2147483647)
-		return (0);
-	if (num < -2147483648)
-		return (-1);
-	else
-		return (num);
+	tab->index++;
+	if (tab->format[tab->index] == 'c')
+		ft_convert_char(tab);
+	if (tab->format[tab->index] == 's')
+		ft_convert_string(tab);
+	if (tab->format[tab->index] == 'p')
+		ft_convert_pointer(tab);
+	if (tab->format[tab->index] == 'd' || tab->format[tab->index] == 'i')
+		ft_convert_number(tab);
+	if (tab->format[tab->index] == 'u')
+		ft_convert_unsigned_number(tab);
+	if (tab->format[tab->index] == 'x')
+		ft_convert_hexadecimal_lower(tab);
+	if (tab->format[tab->index] == 'X')
+		ft_convert_hexadecimal_upper(tab);
+	if (tab->format[tab->index] == '%')
+		tab->total_length += ft_putchar('%');
 }
-
-int			ft_atoi(const char *str)
-{
-	long long	num;
-	int			sign;
-	int			i;
-
-	num = 0;
-	sign = 1;
-	i = 0;
-	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n' ||
-			str[i] == '\r' || str[i] == '\v' || str[i] == '\f')
-		i++;
-	if (str[i] == '-' || str[i] == '+')
-	{
-		if (str[i] == '-')
-			sign = -1;
-		i++;
-	}
-	while (str[i] >= '0' && str[i] <= '9')
-	{
-		num = num * 10 + str[i] - '0';
-		i++;
-	}
-	num = num * sign;
-	return ((int)check_long_num(num));
-}
-
-
-char	*ft_strchr(const char *s, int c)
-{
-	char	a;
-
-	a = c;
-	while (*s)
-	{
-		if (*s == a)
-			return ((char *)s);
-		if (*s == '\0')
-			return (NULL);
-		s++;
-	}
-	if (!a && *s == '\0')
-		return ((char *)s);
-	return (NULL);
-};
-// -------------------------- SECOND UTILS ----------------------
-int ft_is_type(char c)
-{
-	if (c == 'c' || c == 's' || c == 'p' || c == 'd' || c == 'i' || c == 'u' || c == 'x' || c == 'X' || c == '%')
-		return (1);
-	return (0);
-};
-
-int	ft_is_flag(char c)
-{
-	if (c == '-' || c == '0' || c == '.' || c == '#' || c == ' ' || c == '+')
-		return (1);
-	return (0); 
-};
-
-//-------------------------MAOS A OBRA-------------------------------
-
-// int	ft_treat_flags(t_flags tab)
-// {
-
-// };
-
-int	ft_parse_flags(const char *format, int i, va_list args)
-{
-	while (format[i] != '\0')
-	{
-		if (!ft_is_type(format[i]) && !ft_isdigit(format[i]) && !ft_is_flag(format[i]))
-			break ; // contempla os casos de tipos que nao incluímos, como o size
-		else
-		{
-			if (format[i] == '-')
-				tab.minus = 1;
-			if (format[i] == '0' && tab.minus == 0 && ((tab.dot == -1) && !ft_strchr("iuxXod", format[i]))) 
-				tab.zero = 1;
-			if (format[i] == '.')
-			{	
-				if (ft_is_type(++i))
-					tab.dot = 0;
-				else
-					tab.dot = va_arg(args, int); //gets the number after the .
-			}
-			if (format[i] == '#')
-				tab.hash = 1;
-			if (format[i] == ' ' && tab.plus == 0)
-				tab.space = 1;
-			if (format[i] == '+')
-				tab.plus = 1;
-			if (ft_is_type(format[i]))
-				break ;
-		}
-		i++;
-	}
-	printf("\ndot 5 %d\n dot 0 %d \n ", tab.dot, tab.dot);
-	return (i);
-};
 
 int	ft_printf(const char *format, ...)
 {
-	va_list 	args;
-	int			count;
-	int			i;
+	va_list	args;
+	t_tab	tab;
+	char	*copy;
 
-	i = 0;
-	count = 0;
-	if (!format)
-		return 0;
+	copy = ft_strdup(format);
 	va_start(args, format);
-	while (format[i] != '\0')
-	{	
-		if (format[i] == '%' && format[i + 1])
+	init_struct(&tab, copy, &args);
+	while (format[tab.index] != '\0')
+	{
+		if (format[tab.index] == '%')
+			ft_check_type(&tab);
+		else
 		{
-			i = ft_parse_flags(format, ++i, args); // devolve o i onde começa o tipo
-			// treat type conversion
+			write(1, &format[tab.index], 1);
+			tab.total_length++;
 		}
-		if (format[i] != '%') {
-			ft_putchar(format[i]);
-			count++;
-			i++;
-		}
+		tab.index++;
 	}
 	va_end(args);
-	return (count);
-};
+	free(copy);
+	return (tab.total_length);
+}
 
-int main (void) {
-	ft_printf("ola %.5s %.d %i", "string", 10, 5);
-};
+// int     main()
+// {
+//     int a;
+//     int b;
+//     int *c = NULL;
+
+//     a = ft_printf("%s %c %d %% %u %X %x %p\n", "ola", 'l', 123, 651442, 30, 30, c);
+//     b = printf("%s %c %d %% %u %X %x %p\n", "ola", 'l', 123, 651442, 30, 30, c);
+    
+//     ft_printf("%d\n", a);
+//     printf("%d\n", b);
+// }
