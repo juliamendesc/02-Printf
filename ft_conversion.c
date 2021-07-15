@@ -22,22 +22,32 @@ void	ft_convert_number(t_tab *tab)
 {
 	int		digit;
 	char	*converted_string;
+	int		converted_length;
 
 	digit = va_arg(*tab->args, int);
+	converted_length = 0;
 	converted_string = ft_itoa(digit);
-	tab->total_length += ft_putstr(converted_string);
+	converted_length += ft_strlen(converted_string);
+	tab->total_length += converted_length;
+	write(1, converted_string, converted_length);
 	free(converted_string);
 }
 
 void	ft_convert_unsigned_number(t_tab *tab)
 {
-	int		digit;
-	char	*converted_string;
+	unsigned long long int		digit;
+	char						*converted_string;
+	int							converted_length;
 
-	digit = va_arg(*tab->args, int);
+	digit = (unsigned long long int)va_arg(*tab->args, unsigned int);
+	converted_length = 0;
 	converted_string = ft_utoa(digit);
-	tab->total_length += ft_strlen(converted_string);
-	write(1, converted_string, ft_strlen(converted_string));
+	if (converted_string[0] == '-')
+		converted_length += ft_strlen(converted_string) - 1;
+	else
+		converted_length += ft_strlen(converted_string);
+	tab->total_length += converted_length;
+	write(1, converted_string, converted_length);
 	free(converted_string);
 }
 

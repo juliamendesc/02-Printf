@@ -54,15 +54,35 @@ int	ft_printf(const char *format, ...)
 	return (tab.total_length);
 }
 
-// int     main()
-// {
-//     int a;
-//     int b;
-//     int *c = NULL;
 
-//     a = ft_printf("%s %c %d %% %u %X %x %p\n", "ola", 'l', 123, 651442, 30, 30, c);
-//     b = printf("%s %c %d %% %u %X %x %p\n", "ola", 'l', 123, 651442, 30, 30, c);
-    
-//     ft_printf("%d\n", a);
-//     printf("%d\n", b);
-// }
+int	main(void)
+{
+	int a;
+	int b;
+
+	a = printf("\n s int max --0*   %d   *0 0* \n", INT_MAX);
+	b = ft_printf("\n j int min --0*   %d   *0 0* \n", INT_MAX);
+    printf("\n total printf i min %d\n", a);
+    ft_printf("\n total meu printf i min %d\n\n\n", b);
+	a = printf("\n s int max --0*   %d   *0 0* \n", INT_MIN);
+	b = ft_printf("\n j int min --0*   %d   *0 0* \n", INT_MIN);
+    printf("\n total printf i min %d\n", a);
+    ft_printf("\n total meu printf i min %d\n\n\n", b);
+	a = printf("\n s d max --0*   %ld   *0 0* \n", LONG_MIN);
+	b = ft_printf("\n j i max --0*   %d   *0 0* \n", LONG_MIN);
+    printf("\n total printf i min %d\n", a);
+    ft_printf("\n total meu printf i min %d\n", b);
+	a = printf("\n s d max --0*   %ld   *0 0* \n", LONG_MIN);
+	b = ft_printf("\n j d max --0*   %d   *0 0* \n", LONG_MIN);
+    printf("\n total printf d min %d\n", a);
+    ft_printf("\n total meu printf d min %d\n\n\n", b);
+	a = printf("\n s i max --0*   %i   *0 0* \n", LONG_MAX);
+	b = ft_printf("\n j i max --0*   %i   *0 0* \n", LONG_MAX);
+    printf("\n total printf i max %i\n", a);
+    ft_printf("\n total meu printf imax %i\n\n\n", b);
+	a = printf("\n s d max --0*   %i   *0 0* \n", LONG_MAX);
+	b = ft_printf("\n j i max --0*   %i   *0 0* \n", LONG_MAX);
+    printf("\n total printf d max %i\n", a);
+    ft_printf("\n total meu printf d max %i\n\n\n", b);
+
+}

@@ -22,6 +22,19 @@ int	ft_putstr(char *str)
 	return (count);
 }
 
+int	ft_strlen(const char *str)
+{
+	int	len;
+
+	len = 0;
+	while (*str)
+	{
+		len++;
+		str++;
+	}
+	return (len);
+}
+
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
 	char	*d;
@@ -41,19 +54,6 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	return (dest);
 }
 
-int	ft_strlen(const char *str)
-{
-	int	len;
-
-	len = 0;
-	while (*str)
-	{
-		len++;
-		str++;
-	}
-	return (len);
-}
-
 char	*ft_strdup(const char *str)
 {
 	size_t	len;
@@ -61,8 +61,7 @@ char	*ft_strdup(const char *str)
 
 	len = ft_strlen(str) + 1;
 	copy = malloc((unsigned int)len);
-	if (!copy)
-		return (NULL);
+	ft_free_and_null(copy);
 	ft_memcpy(copy, str, len);
 	return (copy);
 }

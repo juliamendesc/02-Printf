@@ -1,77 +1,75 @@
 #include "ft_printf.h"
 
-int	ft_intlen(int digit)
+int	absolute_value(int nbr)
+{
+	if (nbr < 0)
+		return (-nbr);
+	return (nbr);
+}
+
+int	get_len(int nbr)
 {
 	int	len;
 
 	len = 0;
-	if (digit < 0)
-		len++;
-	while (digit != 0)
+	if (nbr <= 0)
+		++len;
+	while (nbr != 0)
 	{
-		digit = digit / 10;
-		len++;
+		++len;
+		nbr = nbr / 10;
 	}
 	return (len);
 }
 
-char	*ft_itoa(int digit)
+char	*ft_itoa(int n)
 {
-	char	*res;
-	int		itoa_len;
+	char	*result;
+	int		len;
 
-	itoa_len = ft_intlen(digit);
-	res = (char *)malloc(sizeof(char) * (itoa_len + 2));
-	if (!res)
+	len = get_len(n);
+	result = malloc(sizeof(char) * (len + 1));
+	if (result == NULL)
 		return (NULL);
-	res[itoa_len] = '\0';
-	if (digit < 0)
-		res[0] = '-';
-	else if (digit == 0)
-		res[0] = '0';
-	if (digit < 0)
-		digit *= -1;
-	while (digit != 0)
+	result[len] = '\0';
+	if (n < 0)
+		result[0] = '-';
+	else if (n == 0)
+		result[0] = '0';
+	while (n != 0)
 	{
-		itoa_len--;
-		res[itoa_len] = digit % 10 + '0';
-		digit = digit / 10;
+		--len;
+		result[len] = absolute_value(n % 10) + '0';
+		n = n / 10;
 	}
-	return (res);
+	return (result);
 }
 
-int	ft_uintlen(unsigned int digit)
+char	*ft_utoa(unsigned int n)
 {
-	int	len;
+	char			*str;
+	int				size;
+	unsigned int	x;
 
-	len = 0;
-	while (digit != 0)
+	x = n;
+	size = 0;
+	if (x < 0)
+		x *= -1;
+	while (x >= 10)
 	{
-		digit = digit / 10;
-		len++;
+		x /= 10;
+		size++;
 	}
-	return (len);
-}
-
-char	*ft_utoa(int digit)
-{
-	char	*res;
-	int		utoa_len;
-
-	utoa_len = ft_uintlen(digit);
-	res = (char *)malloc(sizeof(char) * (utoa_len + 1));
-	if (!res)
-		return (NULL);
-	res[utoa_len] = '\0';
-	if (digit == 0)
-		res[0] = '0';
-	while (digit != 0)
+	str = (char *)malloc(sizeof(str) * (size + 1));
+	ft_free_and_null(str);
+	str[size + 1] = '\0';
+	while (size >= 0)
 	{
-		utoa_len--;
-		res[utoa_len] = digit % 10 + '0';
-		digit = digit / 10;
+		x = n % 10;
+		str[size--] = '0' + x;
+		n = n / 10;
 	}
-	return (res);
+	return (str);
 }
 
 char	*ft_strjoin(char const *s1, char const *s2)
@@ -85,8 +83,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	i = 0;
 	j = 0;
 	str = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!str)
-		return (NULL);
+	ft_free_and_null(str);
 	while (s1[i] != '\0')
 	{
 		str[i] = s1[i];

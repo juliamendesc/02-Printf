@@ -9,13 +9,11 @@ char	*ft_strjoinchr(char *s1, char s2)
 	i = 0;
 	if (!s1 || !s2)
 	{
-		free(s1);
-		return (NULL);
+		ft_free_and_null(s1);
 	}
 	len = ft_strlen(s1);
 	temp = malloc((len + 2) * sizeof(char));
-	if (temp == NULL)
-		return (NULL);
+	ft_free_and_null(temp);
 	while (s1[i] != '\0')
 	{
 		temp[i] = s1[i];
@@ -59,4 +57,31 @@ int	ft_putnbrBase(unsigned long n, char *base)
 	else if (n < baseLength)
 		write(1, &base[n], 1);
 	return (numLength);
+}
+
+void	ft_putnbr(int nb)
+{
+	if (nb == -2147483648)
+		ft_putstr("-2147483648");
+	else if (nb < 0)
+	{
+		ft_putchar('-');
+		ft_putnbr(-nb);
+	}
+	else if (nb >= 10)
+	{
+		ft_putnbr(nb / 10);
+		ft_putchar(nb % 10 + '0');
+	}
+	else
+		ft_putchar(nb + '0');
+}
+
+void	ft_free_and_null(char *ptr)
+{
+	if (!ptr)
+	{
+		free(ptr);
+		ptr = 0;
+	}
 }
