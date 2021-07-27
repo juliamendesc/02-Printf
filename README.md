@@ -1,7 +1,7 @@
 # Printf
 
 <b>Description:</b>
-Write a library that contains ft_printf, a function that will mimic the real printf.<br><br>
+Write a library that contains ft_printf, a function that will mimic the real printf.<br>
 
 <i><a href="https://docs.google.com/document/d/1YVPX_ojm7pL4BQZHfIYDi-3z6dk-rsCfKNEp8Gog8wk/edit?usp=sharing">Julia's log for Printf</a></i>
 
